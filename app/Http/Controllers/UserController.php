@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,9 +15,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Users/UserListing', [
-            // 'mustVerifyEmail' => $request->user() instanceof MustVerifyEmailmail,
-            // 'status' => session('status'),
+
+        $users = User::get();
+        return Inertia::render('Users/UserListing',[
+            'users' => $users,
         ]);
     }
 
@@ -25,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Users/UserCreate');
     }
 
     /**
@@ -33,8 +35,21 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -49,7 +64,11 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return Inertia::render('Users/UserEdit',[
+            'user' => $user
+        ]);
+
     }
 
     /**
@@ -57,7 +76,19 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'required|string|min:8',
+        ]);
+
+        User::find($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
     /**
