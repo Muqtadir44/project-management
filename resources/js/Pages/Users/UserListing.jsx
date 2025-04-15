@@ -1,8 +1,38 @@
 import { BreadCrumb } from '@/Components/BreadCrumb';
+import DangerButton from '@/Components/DangerButton';
+import { DeleteModal } from '@/Components/DeleteModal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function UserListing({ users }) {
+
+    const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+
+
+    const confirmUserDeletion = (userId) => {
+        setConfirmingUserDeletion(true);
+        setSelectedUserId(userId);
+    };
+
+    const closeModal = () => {
+        setConfirmingUserDeletion(false);
+        setSelectedUserId(null);
+    };
+
+    const deleteUser = (e) => {
+        e.preventDefault();
+
+        if(selectedUserId){
+            router.delete(route('users.destroy', selectedUserId), {
+                onSuccess: () => closeModal(),
+            });
+        }
+    };
+
+
     return (
         <AuthenticatedLayout
             header={
@@ -64,6 +94,9 @@ export default function UserListing({ users }) {
                                                     >
                                                         Edit
                                                     </Link>
+                                                    <p onClick={() =>confirmUserDeletion(user.id)}>
+                                                        Delete
+                                                    </p>
                                                 </td>
                                             </tr>
                                         ))}
@@ -75,6 +108,12 @@ export default function UserListing({ users }) {
                     </div>
                 </div>
             </div>
+
+            <DeleteModal
+                show={confirmingUserDeletion}
+                onClose={closeModal}
+                onConfirm={deleteUser}
+            />
         </AuthenticatedLayout>
     );
 }
