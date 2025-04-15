@@ -1,3 +1,4 @@
+import ActionDropDown from '@/Components/ActionDropDown';
 import { BreadCrumb } from '@/Components/BreadCrumb';
 import DangerButton from '@/Components/DangerButton';
 import { DeleteModal } from '@/Components/DeleteModal';
@@ -88,15 +89,29 @@ export default function UserListing({ users }) {
                                                 <td className="px-4 py-2">{user.name}</td>
                                                 <td className="px-4 py-2">{user.email}</td>
                                                 <td className="px-4 py-2">
-                                                    <Link
-                                                        href={route('users.edit', user.id)}
-                                                        className="text-blue-500 hover:underline"
-                                                    >
-                                                        Edit
-                                                    </Link>
-                                                    <p onClick={() =>confirmUserDeletion(user.id)}>
-                                                        Delete
-                                                    </p>
+                                                  
+                                                        <ActionDropDown>
+                                                            <div className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                                                                <Link
+                                                                    href="#"
+                                                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                                                >
+                                                                    View
+                                                                </Link>
+                                                                <Link
+                                                                    href={route('users.edit', user.id)}
+                                                                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                                                >
+                                                                    Edit
+                                                                </Link>
+                                                                <button
+                                                                    className="block w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400"
+                                                                    onClick={() =>confirmUserDeletion(user.id)}
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </ActionDropDown>
                                                 </td>
                                             </tr>
                                         ))}
