@@ -2,18 +2,21 @@ import { BreadCrumb } from '@/Components/BreadCrumb';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-export default function UserEdit({user}) {
+export default function UserEdit({ user }) {
 
-    console.log(user.name)
+
     const { data, setData, put, processing, errors, reset } = useForm({
         name: user.name,
         email: user.email,
-        password: user.password,
+        current_password: '',
+        password: '',
+        password_confirmation: '',
     });
 
+    
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('users.update',user.id), {
+        put(route('users.update', user.id), {
             onSuccess: () => reset(),
         });
     };
@@ -54,6 +57,7 @@ export default function UserEdit({user}) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             <form onSubmit={handleSubmit} className="space-y-6">
+                                {/* Name Field */}
                                 <div>
                                     <label className="block mb-1 text-sm font-medium">Name</label>
                                     <input
@@ -67,6 +71,7 @@ export default function UserEdit({user}) {
                                     )}
                                 </div>
 
+                                {/* Email Field */}
                                 <div>
                                     <label className="block mb-1 text-sm font-medium">Email</label>
                                     <input
@@ -80,19 +85,56 @@ export default function UserEdit({user}) {
                                     )}
                                 </div>
 
-                                <div>
-                                    <label className="block mb-1 text-sm font-medium">Password</label>
-                                    <input
-                                        type="password"
-                                        value={data.password}
-                                        onChange={(e) => setData('password', e.target.value)}
-                                        className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
-                                    />
-                                    {errors.password && (
-                                        <div className="text-sm text-red-500">{errors.password}</div>
-                                    )}
+                                {/* Optional Password Change Section */}
+                                <div className="pt-6 border-t border-gray-300 dark:border-gray-700">
+                                    <h3 className="mb-2 font-semibold text-gray-700 text-md dark:text-gray-200">
+                                        Change Password (optional)
+                                    </h3>
+
+                                    {/* Current Password */}
+                                    <div className="mb-4">
+                                        <label className="block mb-1 text-sm font-medium">Current Password</label>
+                                        <input
+                                            type="password"
+                                            value={data.current_password}
+                                            onChange={(e) => setData('current_password', e.target.value)}
+                                            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
+                                        />
+                                        {errors.current_password && (
+                                            <div className="text-sm text-red-500">{errors.current_password}</div>
+                                        )}
+                                    </div>
+
+                                    {/* New Password */}
+                                    <div className="mb-4">
+                                        <label className="block mb-1 text-sm font-medium">New Password</label>
+                                        <input
+                                            type="password"
+                                            value={data.password}
+                                            onChange={(e) => setData('password', e.target.value)}
+                                            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
+                                        />
+                                        {errors.password && (
+                                            <div className="text-sm text-red-500">{errors.password}</div>
+                                        )}
+                                    </div>
+
+                                    {/* Confirm Password */}
+                                    <div className="mb-4">
+                                        <label className="block mb-1 text-sm font-medium">Confirm New Password</label>
+                                        <input
+                                            type="password"
+                                            value={data.password_confirmation}
+                                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                                            className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
+                                        />
+                                        {errors.password_confirmation && (
+                                            <div className="text-sm text-red-500">{errors.password_confirmation}</div>
+                                        )}
+                                    </div>
                                 </div>
 
+                                {/* Submit Button */}
                                 <div>
                                     <button
                                         type="submit"
@@ -105,6 +147,7 @@ export default function UserEdit({user}) {
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </AuthenticatedLayout>
