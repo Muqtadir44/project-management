@@ -100,8 +100,22 @@ const DropdownLink = ({ className = '', children, ...props }) => {
     );
 };
 
+const DropdownButton = ({className = '',children,...props}) =>{
+  return (
+    <button 
+        {...props}
+        className={
+            "block w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-400"+
+            className
+        }>
+        {children}
+    </button>
+  )  
+};
+
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;
+Dropdown.button = DropdownButton;
 
 export default Dropdown;
