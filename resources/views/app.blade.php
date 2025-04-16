@@ -18,5 +18,9 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+    {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> --}}
+    {{-- <link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script> --}}
+
     </body>
 </html>
