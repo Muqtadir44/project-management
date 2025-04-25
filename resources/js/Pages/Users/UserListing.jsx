@@ -79,6 +79,7 @@ export default function UserListing({ users }) {
                                             <th className="px-4 py-2">ID</th>
                                             <th className="px-4 py-2">Name</th>
                                             <th className="px-4 py-2">Email</th>
+                                            <th className="px-4 py-2">Created</th>
                                             <th className="px-4 py-2">Actions</th>
                                         </tr>
                                     </thead>
@@ -88,8 +89,9 @@ export default function UserListing({ users }) {
                                                 <td className="px-4 py-2">{user.id}</td>
                                                 <td className="px-4 py-2">{user.name}</td>
                                                 <td className="px-4 py-2">{user.email}</td>
+                                                <td className="px-4 py-2">{(user.created_at)}</td>
                                                 <td className="px-4 py-2">
-                                                  
+
                                                         <ActionDropDown>
                                                             <div className="py-1 text-sm text-gray-700 dark:text-gray-200">
                                                                 <Link
