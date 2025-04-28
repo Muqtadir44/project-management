@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Index() {
+export default function Index({projects}) {
     return (
         <AuthenticatedLayout
             header={
@@ -17,6 +17,13 @@ export default function Index() {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="p-6 text-gray-900 dark:text-gray-100">
                             Projects List
+                            <pre>
+                                {JSON.stringify(
+                                    projects,
+                                    null,
+                                    2
+                                )}
+                            </pre>
                         </div>
                     </div>
                 </div>
