@@ -14,14 +14,7 @@ export default function NavBar() {
                     Dashboard
                 </NavLink>
             </div>
-            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                <NavLink
-                    href={route('users.index')}
-                    active={route().current('users.index') || route().current('users.create') || route().current('users.edit') }
-                >
-                    User
-                </NavLink>
-            </div>
+
         </>
     )
 }
