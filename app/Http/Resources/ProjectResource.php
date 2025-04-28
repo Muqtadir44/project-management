@@ -20,8 +20,8 @@ class ProjectResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,
-            'created_by' => $this->createdBy,
-            'updated_by' => $this->updatedBy,
+            'created_by' =>  new UserResource($this->createdBy),
+            'updated_by' => new UserResource($this->updatedBy),
             'due_date' => (new Carbon($this->created_at))->format('Y-m-d H:i:s'),
             'created_at' => (new Carbon($this->updated_at))->format('Y-m-d H:i:s'),
         ];
