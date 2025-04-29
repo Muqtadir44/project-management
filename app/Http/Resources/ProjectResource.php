@@ -18,6 +18,7 @@ class ProjectResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'image_path' => $this->image_path,
             'description' => $this->description,
             'status' => $this->status,
             'created_by' =>  new UserResource($this->createdBy),
