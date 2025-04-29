@@ -17,11 +17,11 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->sentence(3),
-            'description' => $this->faker->paragraph(),
-            'due_date' => $this->faker->dateTimeBetween('now', '+1 year'),
-            'status' => $this->faker->randomElement(['pending', 'in_progress', 'completed']),
-            'image_path' => $this->faker->imageUrl(),
+            'name' => fake()->sentence(3),
+            'description' => fake()->paragraph(),
+            'due_date' => fake()->dateTimeBetween('now', '+1 year'),
+            'status' => fake()->randomElement(['pending', 'in_progress', 'completed']),
+            'image_path' => fake()->imageUrl(),
             'created_by' => 1,
             'updated_by' => 1,
         ];
