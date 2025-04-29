@@ -1,10 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -14,11 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-
-        $users = User::where('id','!=',Auth::user()->id)->get();
-        return Inertia::render('Users/UserListing', [
-            'users' => $users,
-        ]);
+        return Inertia::render("Users/Index");
     }
 
     /**
@@ -26,33 +22,21 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Users/UserCreate');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-        ]);
-
-        User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
-
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
         //
     }
@@ -60,71 +44,24 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
-        return Inertia::render('Users/UserEdit', [
-            'user' => $user,
-        ]);
-
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, string $id)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email,' . $id,
-    //         'password' => 'required|string|min:8',
-    //     ]);
-
-    //     User::find($id)->update([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => bcrypt($request->password),
-    //     ]);
-
-    //     return redirect()->route('users.index')->with('success', 'User updated successfully.');
-    // }
-
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-
-        // Basic info validation
-        $validatedData = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-        ]);
-
-        // If password fields are filled, validate them
-        if ($request->filled('current_password') || $request->filled('password')) {
-            $request->validate([
-                'current_password' => ['required', function ($attribute, $value, $fail) use ($user) {
-                    if (! Hash::check($value, $user->password)) {
-                        $fail('The current password is incorrect.');
-                    }
-                }],
-                'password'         => 'required|string|min:8|confirmed',
-            ]);
-
-            $validatedData['password'] = bcrypt($request->password);
-        }
-
-        $user->update($validatedData);
-
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User deleted.');
+        //
     }
 }

@@ -19,7 +19,23 @@ export default function NavBar() {
                     href={route('users.index')}
                     active={route().current('users.index') || route().current('users.create') || route().current('users.edit') }
                 >
-                    User
+                    Users
+                </NavLink>
+            </div>
+            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <NavLink
+                    href={route('projects.index')}
+                    active={route().current('projects.index') || route().current('projects.create') || route().current('projects.edit') }
+                >
+                    Projects
+                </NavLink>
+            </div>
+            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <NavLink
+                    href={route('tasks.index')}
+                    active={route().current('tasks.index') || route().current('tasks.create') || route().current('tasks.edit') }
+                >
+                    Tasks
                 </NavLink>
             </div>
         </>
