@@ -5,6 +5,7 @@ import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/Constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/16/solid'
+import TableHeading from "@/Components/TableHeading";
 
 export default function Index({ projects, queryParams = null }) {
 
@@ -17,7 +18,7 @@ export default function Index({ projects, queryParams = null }) {
         } else {
             delete queryParams[name];
         }
-
+        console.log(queryParams);
         router.get(route('projects.index'), queryParams);
     }
 
@@ -38,7 +39,7 @@ export default function Index({ projects, queryParams = null }) {
             queryParams.sortField = name;
             queryParams.sortOrder = 'asc';
         }
-
+        console.log(queryParams);
         router.get(route('projects.index'), queryParams);
 
     }
@@ -61,54 +62,17 @@ export default function Index({ projects, queryParams = null }) {
                                 <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
                                     <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr className="text-nowrap">
-                                            <th onClick={(e) => sortChanged('id')} className="px-3 py-3">
-                                                <div className="flex items-center justify-between">
-                                                    ID
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th className="px-3 py-3">Image</th>
-                                            <th onClick={(e) => sortChanged('name')} className="px-3 py-3">
-                                                <div className="flex items-center justify-between">
-                                                    Name
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={(e) => sortChanged('status')} className="px-3 py-3">
-                                                <div className="flex items-center justify-between">
-                                                    Status
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={(e) => sortChanged('created_at') } className="px-3 py-3">
-                                                <div className="flex items-center justify-between">
-                                                    Create Date
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th onClick={(e) => sortChanged('due_date')} className="px-3 py-3">
-                                                <div className="flex items-center justify-between">
-                                                    Due Date
-                                                    <div>
-                                                        <ChevronUpIcon className="w-4" />
-                                                        <ChevronDownIcon className="w-4" />
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <th className="px-3 py-3">Created By</th>
-                                            <th className="px-3 py-3 text-right">Actions</th>
+                                            <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
+                                            <TableHeading name="Image_path" sortable={false}>Image</TableHeading>
+                                            <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
+                                            <TableHeading name="status" sortable={false}>status</TableHeading>
+
+                                            <TableHeading name="created_at" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Create Date</TableHeading>
+
+                                            <TableHeading name="due_date" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Due Date</TableHeading>
+
+                                            <TableHeading name="created_by" sortable={false}>Created By</TableHeading>
+                                            <TableHeading name="action" sortable={false}>Actions</TableHeading>
                                         </tr>
                                     </thead>
                                     <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
