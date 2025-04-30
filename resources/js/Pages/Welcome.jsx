@@ -4,7 +4,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
         <>
             <Head title="ProjectHub - Welcome" />
-            <div className="bg-gradient-to-b from-blue-300 text-gray-400 dark:bg-gray-900 dark:text-gray-50 min-h-screen">
+            <div className="bg-gradient-to-b from-blue-250 text-gray-400 dark:bg-gray-900 dark:text-gray-50 min-h-screen">
                 <div className="relative flex flex-col items-center justify-center min-h-screen">
                     <div className="w-full max-w-7xl px-6">
                         <header className="flex items-center justify-between py-8">
@@ -48,7 +48,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                 <h1 className="text-5xl font-bold mb-6">
                                     Manage Projects, Teams & Tasks
                                     <br />
-                                    <span className="text-blue-600">Effortlessly</span>
+                                    <span className="text-blue-700 text-6xl">Effortlessly</span>
                                 </h1>
                                 <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
                                     Collaborate, track progress, and deliver projects successfully
