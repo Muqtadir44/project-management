@@ -113,7 +113,7 @@ export default function Index({ projects, queryParams = null }) {
                                                     <td className="px-3 py-3">
                                                         <img src={project.image_path} alt="" style={{ width: 60 }} />
                                                     </td>
-                                                    <th className="px-3 py-3 hover:underline">
+                                                    <th className="px-3 py-3 text-white hover:underline">
                                                         <Link href={route('projects.show',project.id)}>
                                                             {project.name}
                                                         </Link>
