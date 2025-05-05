@@ -3,9 +3,46 @@ import SelectInput from "@/Components/SelectInput"
 import TableHeading from "@/Components/TableHeading"
 import TextInput from "@/Components/TextInput"
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/Constants"
-import { Link } from "lucide-react"
+import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({ tasks,queryParams,sortChanged }) {
+export default function TaskTable({ tasks,queryParams = null}) {
+
+        queryParams = queryParams || {};
+
+        const searchFieldChanged = (name, value) => {
+            console.log(name, value);
+            if (value) {
+                queryParams[name] = value;
+            } else {
+                delete queryParams[name];
+            }
+            console.log(queryParams);
+            router.get(route('tasks.index'), queryParams);
+        }
+
+        const onKeyPress = (name, e) => {
+            if (e.key !== 'Enter') return;
+            searchFieldChanged(name, e.target.value);
+        }
+
+
+        const sortChanged = (name) => {
+            if (name === queryParams.sortField) {
+                if (queryParams.sortOrder === 'asc') {
+                    queryParams.sortOrder = 'desc';
+                } else {
+                    queryParams.sortOrder = 'asc';
+                }
+            } else {
+                queryParams.sortField = name;
+                queryParams.sortOrder = 'asc';
+            }
+            console.log(queryParams);
+            router.get(route('tasks.index'), queryParams);
+
+        }
+
+
     return (
         <>
             <div className="overflow-auto">
