@@ -13,7 +13,10 @@ class TaskResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+
+     public static $wrap = false; // Disable wrapping the resource in a data key
+
+     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,

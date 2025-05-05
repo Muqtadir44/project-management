@@ -13,6 +13,9 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
+    public static $wrap = false; // Disable wrapping the resource in a data key
+
     public function toArray(Request $request): array
     {
         return [
