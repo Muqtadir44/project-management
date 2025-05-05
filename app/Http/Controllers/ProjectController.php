@@ -19,7 +19,7 @@ class ProjectController extends Controller
 
         $sortField = request("sortField","created_at");
         $sortOrder = request("sortOrder","desc");
-        
+
         if(request("name")){
             $query->where("name", "like", "%".request("name")."%");
         }
@@ -27,7 +27,7 @@ class ProjectController extends Controller
         if(request("status")){
             $query->where("status", request("status"));
         }
-        
+
         $projects = $query
                     ->orderBy($sortField, $sortOrder)
                     ->paginate(10)->onEachSide(5);
@@ -59,7 +59,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+
+        return Inertia::render("Projects/Show", [
+            "project" => new ProjectResource($project),
+        ]);
     }
 
     /**
