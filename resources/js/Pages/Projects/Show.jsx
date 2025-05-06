@@ -111,7 +111,7 @@ export default function Show({ auth, project, tasks, queryParams }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="text-gray-900 dark:text-gray-100">
-                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false} />
+                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false} project={project.id} />
                         </div>
                     </div>
                 </div>
