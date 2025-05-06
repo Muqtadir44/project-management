@@ -5,6 +5,7 @@ import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/Constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
+import { PlusCircleIcon } from '@heroicons/react/16/solid'
 
 export default function Index({ projects, queryParams = null }) {
 
@@ -46,9 +47,14 @@ export default function Index({ projects, queryParams = null }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Projects
-                </h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                        Projects
+                    </h2>
+                    <Link className="flex items-center justify-between px-3 py-1 font-bold text-white transition-all rounded shadow bg-emerald-500 hover:bg-emerald-600" href={route('projects.create')}>
+                        New Project &nbsp; <PlusCircleIcon className="w-4" />
+                    </Link>
+                </div>
             }
         >
             <Head title="Projects" />
@@ -114,7 +120,7 @@ export default function Index({ projects, queryParams = null }) {
                                                         <img src={project.image_path} alt="" style={{ width: 60 }} />
                                                     </td>
                                                     <th className="px-3 py-3 text-white hover:underline">
-                                                        <Link href={route('projects.show',project.id)}>
+                                                        <Link href={route('projects.show', project.id)}>
                                                             {project.name}
                                                         </Link>
                                                     </th>
