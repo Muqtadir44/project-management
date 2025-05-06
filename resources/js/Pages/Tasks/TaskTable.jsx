@@ -5,145 +5,147 @@ import TextInput from "@/Components/TextInput"
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/Constants"
 import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({ tasks,queryParams = null,showProject = true}) {
-        console.log(tasks);
+export default function TaskTable({ tasks, queryParams = null, showProject = true }) {
+    console.log(tasks);
 
-        queryParams = queryParams || {};
+    queryParams = queryParams || {};
 
-        const searchFieldChanged = (name, value) => {
-            console.log(name, value);
-            if (value) {
-                queryParams[name] = value;
-            } else {
-                delete queryParams[name];
-            }
-            console.log(queryParams);
-            router.get(route('tasks.index'), queryParams);
+    const searchFieldChanged = (name, value) => {
+        console.log(name, value);
+        if (value) {
+            queryParams[name] = value;
+        } else {
+            delete queryParams[name];
         }
+        console.log(queryParams);
+        router.get(route('tasks.index'), queryParams);
+    }
 
-        const onKeyPress = (name, e) => {
-            if (e.key !== 'Enter') return;
-            searchFieldChanged(name, e.target.value);
-        }
+    const onKeyPress = (name, e) => {
+        if (e.key !== 'Enter') return;
+        searchFieldChanged(name, e.target.value);
+    }
 
 
-        const sortChanged = (name) => {
-            if (name === queryParams.sortField) {
-                if (queryParams.sortOrder === 'asc') {
-                    queryParams.sortOrder = 'desc';
-                } else {
-                    queryParams.sortOrder = 'asc';
-                }
+    const sortChanged = (name) => {
+        if (name === queryParams.sortField) {
+            if (queryParams.sortOrder === 'asc') {
+                queryParams.sortOrder = 'desc';
             } else {
-                queryParams.sortField = name;
                 queryParams.sortOrder = 'asc';
             }
-            console.log(queryParams);
-            router.get(route('tasks.index'), queryParams);
-
+        } else {
+            queryParams.sortField = name;
+            queryParams.sortOrder = 'asc';
         }
+        console.log(queryParams);
+        router.get(route('tasks.index'), queryParams);
+
+    }
 
 
     return (
         <>
-            <div className="overflow-auto">
-                <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr className="text-nowrap">
-                            <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
-                            <TableHeading name="Image_path" sortable={false}>Image</TableHeading>
-                            {showProject && <TableHeading name="project_id" sortable={false} >Project</TableHeading>}
-                            {/* <TableHeading name="name" sortField={false} >Project</TableHeading> */}
-                            <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
-                            <TableHeading name="status" sortable={false}>Status</TableHeading>
-                            <TableHeading name="priority" sortable={false}>Priority</TableHeading>
+            <div className="pb-6 text-gray-900 dark:text-gray-100">
+                <div className="overflow-auto border border-gray-200 shadow-sm dark:border-gray-700">
+                    <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        {/* Table Header */}
+                        <thead className="text-xs text-gray-700 uppercase border-b bg-gray-50 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600">
+                            <tr className="whitespace-nowrap">
+                                <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
+                                <TableHeading name="Image_path" sortable={false}>Image</TableHeading>
+                                {showProject && <TableHeading name="project_id" sortable={false}>Project</TableHeading>}
+                                <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
+                                <TableHeading name="status" sortable={false}>Status</TableHeading>
+                                <TableHeading name="priority" sortable={false}>Priority</TableHeading>
+                                <TableHeading name="created_at" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Create Date</TableHeading>
+                                <TableHeading name="due_date" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Due Date</TableHeading>
+                                <TableHeading name="created_by" sortable={false}>Created By</TableHeading>
+                                <TableHeading name="action" sortable={false}>Actions</TableHeading>
+                            </tr>
+                        </thead>
 
-                            <TableHeading name="created_at" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Create Date</TableHeading>
+                        {/* Filter Row */}
+                        <thead className="text-xs border-b bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                            <tr className="whitespace-nowrap">
+                                <th className="px-4 py-2"></th>
+                                <th className="px-4 py-2"></th>
+                                {showProject && <th className="px-4 py-2"></th>}
+                                <th className="px-4 py-2">
+                                    <TextInput
+                                        defaultValue={queryParams.name || ''}
+                                        className="w-full"
+                                        placeholder="Task Name"
+                                        onBlur={(e) => searchFieldChanged('name', e.target.value)}
+                                        onKeyPress={e => onKeyPress('name', e)}
+                                    />
+                                </th>
+                                <th className="px-4 py-2">
+                                    <SelectInput
+                                        defaultValue={queryParams.status || ''}
+                                        className="w-full"
+                                        onChange={(e) => searchFieldChanged('status', e.target.value)}
+                                    >
+                                        <option value="">Select Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="in_progress">In Progress</option>
+                                    </SelectInput>
+                                </th>
+                                <th className="px-4 py-2">
+                                    <SelectInput
+                                        defaultValue={queryParams.priority || ''}
+                                        className="w-full"
+                                        onChange={(e) => searchFieldChanged('priority', e.target.value)}
+                                    >
+                                        <option value="">Select Priority</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </SelectInput>
+                                </th>
+                                <th className="px-4 py-2"></th>
+                                <th className="px-4 py-2"></th>
+                                <th className="px-4 py-2"></th>
+                                <th className="px-4 py-2"></th>
+                            </tr>
+                        </thead>
 
-                            <TableHeading name="due_date" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Due Date</TableHeading>
-
-                            <TableHeading name="created_by" sortable={false}>Created By</TableHeading>
-                            <TableHeading name="action" sortable={false}>Actions</TableHeading>
-                        </tr>
-                    </thead>
-                    <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr className="text-nowrap">
-                            <th className="py-1"></th>
-                            <th className="py-1"></th>
-                            {showProject && <th className="py-1"></th>}
-                            <th className="py-1">
-                                <TextInput
-                                    defaultValue={queryParams.name || ''}
-                                    className="w-full"
-                                    placeholder="Task Name"
-                                    onBlur={(e) => searchFieldChanged('name', e.target.value)}
-                                    onKeyPress={e => onKeyPress('name', e)}
-                                />
-                            </th>
-                            <th className="py-1">
-                                <SelectInput
-                                    defaultValue={queryParams.status || ''}
-                                    className="w-full"
-                                    onChange={(e) => searchFieldChanged('status', e.target.value)}
-                                >
-                                    <option value="">Select Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="in_progress">In Progress</option>
-                                </SelectInput>
-                            </th>
-                            <th className="py-1">
-                                <SelectInput
-                                    defaultValue={queryParams.priority || ''}
-                                    className="w-full"
-                                    onChange={(e) => searchFieldChanged('priority', e.target.value)}
-                                >
-                                    <option value="">Select Priority</option>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                </SelectInput>
-                            </th>
-                            <th className="py-1"></th>
-                            <th className="py-1"></th>
-                            <th className="py-1"></th>
-                            <th className="py-1"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tasks.data.map((task) => {
-                            return (
-                                <tr key={task.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <td className="px-3 py-3">{task.id}</td>
-                                    <td className="px-3 py-3">
-                                        <img src={task.image_path} alt="" style={{ width: 60 }} />
+                        {/* Table Body */}
+                        <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                            {tasks.data.map((task) => (
+                                <tr key={task.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td className="px-4 py-4">{task.id}</td>
+                                    <td className="px-4 py-4">
+                                        <img src={task.image_path} alt={task.name} className="object-cover w-12 h-12 rounded" />
                                     </td>
-                                    {showProject && <td className="px-3 py-3">{task.project.name}</td>}
-                                    <td className="px-3 py-3">{task.name}</td>
-                                    <td className="px-3 py-3">
-                                        <span className={"px-2 py-1 rounded text-white " + TASK_STATUS_CLASS_MAP[task.status]}>
+                                    {showProject && <td className="px-4 py-4">{task.project.name}</td>}
+                                    <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">{task.name}</td>
+                                    <td className="px-4 py-4">
+                                        <span className={`px-2 py-1 rounded text-white ${TASK_STATUS_CLASS_MAP[task.status]}`}>
                                             {TASK_STATUS_TEXT_MAP[task.status]}
                                         </span>
                                     </td>
-                                    <td className="px-3 py-3">
-                                        <span className={"px-2 py-1 rounded text-white " + TASK_PRIORITY_CLASS_MAP[task.priority]}>
+                                    <td className="px-4 py-4">
+                                        <span className={`px-2 py-1 rounded text-white ${TASK_PRIORITY_CLASS_MAP[task.priority]}`}>
                                             {TASK_PRIORITY_TEXT_MAP[task.priority]}
                                         </span>
                                     </td>
-                                    <td className="px-3 py-3 text-nowrap">{task.created_at}</td>
-                                    <td className="px-3 py-3 text-nowrap">{task.due_date}</td>
-                                    <td className="px-3 py-3">{task.created_by.name}</td>
-                                    <td className="px-3 py-3">
-                                        <Link href={route('tasks.edit', task.id)} className="mx-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <Link href={route('tasks.destroy', task.id)} className="mx-1 font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
+                                    <td className="px-4 py-4 text-nowrap">{task.created_at}</td>
+                                    <td className="px-4 py-4 text-nowrap">{task.due_date}</td>
+                                    <td className="px-4 py-4">{task.created_by.name}</td>
+                                    <td className="px-4 py-4 space-x-2">
+                                        <Link href={route('tasks.edit', task.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
+                                        <Link href={route('tasks.destroy', task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
                                     </td>
                                 </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <Pagination links={tasks.meta.links} />
             </div>
-            <Pagination links={tasks.meta.links} />
+
 
         </>
     )

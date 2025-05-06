@@ -70,28 +70,28 @@ export default function Index({ projects, queryParams = null }) {
                     </BreadCrumb>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="pb-6 text-gray-900 dark:text-gray-100">
-                            <div className="overflow-auto">
-                                <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                                    <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr className="text-nowrap">
+                            <div className="overflow-auto border border-gray-200 shadow-sm dark:border-gray-700">
+                                <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    {/* Table Header */}
+                                    <thead className="text-xs text-gray-700 uppercase border-b bg-gray-50 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600">
+                                        <tr className="whitespace-nowrap">
                                             <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
                                             <TableHeading name="Image_path" sortable={false}>Image</TableHeading>
                                             <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
-                                            <TableHeading name="status" sortable={false}>status</TableHeading>
-
+                                            <TableHeading name="status" sortable={false}>Status</TableHeading>
                                             <TableHeading name="created_at" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Create Date</TableHeading>
-
                                             <TableHeading name="due_date" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Due Date</TableHeading>
-
                                             <TableHeading name="created_by" sortable={false}>Created By</TableHeading>
                                             <TableHeading name="action" sortable={false}>Actions</TableHeading>
                                         </tr>
                                     </thead>
-                                    <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr className="text-nowrap">
-                                            <th className="py-1"></th>
-                                            <th className="py-1"></th>
-                                            <th className="py-1">
+
+                                    {/* Filter Row */}
+                                    <thead className="text-xs border-b bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                                        <tr className="whitespace-nowrap">
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2">
                                                 <TextInput
                                                     defaultValue={queryParams.name || ''}
                                                     className="w-full"
@@ -100,7 +100,7 @@ export default function Index({ projects, queryParams = null }) {
                                                     onKeyPress={e => onKeyPress('name', e)}
                                                 />
                                             </th>
-                                            <th className="py-1">
+                                            <th className="px-4 py-2">
                                                 <SelectInput
                                                     defaultValue={queryParams.status || ''}
                                                     className="w-full"
@@ -112,45 +112,47 @@ export default function Index({ projects, queryParams = null }) {
                                                     <option value="in_progress">In Progress</option>
                                                 </SelectInput>
                                             </th>
-                                            <th className="py-1"></th>
-                                            <th className="py-1"></th>
-                                            <th className="py-1"></th>
-                                            <th className="py-1"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {projects.data.map((project) => {
-                                            return (
-                                                <tr key={project.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                    <td className="px-3 py-3">{project.id}</td>
-                                                    <td className="px-3 py-3">
-                                                        <img src={project.image_path} alt="" style={{ width: 60 }} />
-                                                    </td>
-                                                    <th className="px-3 py-3 text-white hover:underline">
-                                                        <Link href={route('projects.show', project.id)}>
-                                                            {project.name}
-                                                        </Link>
-                                                    </th>
-                                                    <td className="px-3 py-3">
-                                                        <span className={"px-2 py-1 rounded text-white " + PROJECT_STATUS_CLASS_MAP[project.status]}>
-                                                            {PROJECT_STATUS_TEXT_MAP[project.status]}
-                                                        </span>
-                                                    </td>
-                                                    <td className="px-3 py-3 text-nowrap">{project.created_at}</td>
-                                                    <td className="px-3 py-3 text-nowrap">{project.due_date}</td>
-                                                    <td className="px-3 py-3">{project.created_by.name}</td>
-                                                    <td className="px-3 py-3">
-                                                        <Link href={route('projects.edit', project.id)} className="mx-1 font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                                        <Link href={route('projects.destroy', project.id)} className="mx-1 font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
+
+                                    {/* Table Body */}
+                                    <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                                        {projects.data.map((project) => (
+                                            <tr key={project.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-700">
+                                                <td className="px-4 py-4">{project.id}</td>
+                                                <td className="px-4 py-4">
+                                                    <img src={project.image_path} alt={project.name} className="object-cover w-12 h-12 rounded" />
+                                                </td>
+                                                <td className="px-4 py-4 font-medium text-gray-900 dark:text-white hover:underline">
+                                                    <Link href={route('projects.show', project.id)}>
+                                                        {project.name}
+                                                    </Link>
+                                                </td>
+                                                <td className="px-4 py-4">
+                                                    <span className={`px-2 py-1 rounded text-white ${PROJECT_STATUS_CLASS_MAP[project.status]}`}>
+                                                        {PROJECT_STATUS_TEXT_MAP[project.status]}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-4 text-nowrap">{project.created_at}</td>
+                                                <td className="px-4 py-4 text-nowrap">{project.due_date}</td>
+                                                <td className="px-4 py-4">{project.created_by.name}</td>
+                                                <td className="px-4 py-4 space-x-2">
+                                                    <Link href={route('projects.edit', project.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
+                                                    <Link href={route('projects.destroy', project.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
+
                             <Pagination links={projects.meta.links} />
                         </div>
+
                     </div>
                 </div>
             </div>
