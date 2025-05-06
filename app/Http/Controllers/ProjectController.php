@@ -45,7 +45,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Projects/Create',[]);
+        // return inertia('Projects/Create',['data'=>[1,2,3,4]]);
+        // return Inertia::render('Projects/Create',[]); //? - both can be used
+        return Inertia::render('Projects/Create');
     }
 
     /**
