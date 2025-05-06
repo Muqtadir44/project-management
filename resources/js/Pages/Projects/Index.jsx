@@ -6,6 +6,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
 import { PlusCircleIcon } from '@heroicons/react/16/solid'
+import { BreadCrumb } from "@/Components/BreadCrumb";
 
 export default function Index({ projects, queryParams = null }) {
 
@@ -59,10 +60,16 @@ export default function Index({ projects, queryParams = null }) {
         >
             <Head title="Projects" />
 
+
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <BreadCrumb>
+                        <li className="text-gray-500 dark:text-gray-400">
+                            Projects
+                        </li>
+                    </BreadCrumb>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        <div className="text-gray-900 dark:text-gray-100">
+                        <div className="pb-6 text-gray-900 dark:text-gray-100">
                             <div className="overflow-auto">
                                 <table className="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
                                     <thead className="text-xs text-gray-700 uppercase border border-b-2 border-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

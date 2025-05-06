@@ -1,9 +1,10 @@
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/Constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import TaskTable from "../Tasks/TaskTable";
+import { BreadCrumb } from "@/Components/BreadCrumb";
 
-export default function Show({ auth, project,tasks,queryParams }) {
+export default function Show({ auth, project, tasks, queryParams }) {
     queryParams = queryParams || {};
     console.log(tasks);
     console.log(project);
@@ -22,6 +23,17 @@ export default function Show({ auth, project,tasks,queryParams }) {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <BreadCrumb>
+                        <li>
+                            <Link href={route('projects.index')} className="text-blue-600 hover:underline dark:text-blue-400">
+                                Projects
+                            </Link>
+                            <span className="mx-2">/</span>
+                        </li>
+                        <li className="text-gray-500 dark:text-gray-400">
+                            Show
+                        </li>
+                    </BreadCrumb>
                     <div className="overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800">
                         {/* Project Image */}
                         <img
@@ -99,7 +111,7 @@ export default function Show({ auth, project,tasks,queryParams }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="text-gray-900 dark:text-gray-100">
-                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false}/>
+                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false} />
                         </div>
                     </div>
                 </div>
