@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput"
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/Constants"
 import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({ tasks, queryParams = null, showProject = true }) {
+export default function TaskTable({ tasks, queryParams = null, showProject = true,project = 0 }) {
     console.log(tasks);
 
     queryParams = queryParams || {};
@@ -18,7 +18,11 @@ export default function TaskTable({ tasks, queryParams = null, showProject = tru
             delete queryParams[name];
         }
         console.log(queryParams);
-        router.get(route('tasks.index'), queryParams);
+        if(showProject){
+            router.get(route('tasks.index'), queryParams);
+        }else{
+            router.get(route('projects.show',project), queryParams);
+        }
     }
 
     const onKeyPress = (name, e) => {
@@ -39,7 +43,11 @@ export default function TaskTable({ tasks, queryParams = null, showProject = tru
             queryParams.sortOrder = 'asc';
         }
         console.log(queryParams);
-        router.get(route('tasks.index'), queryParams);
+        if(showProject){
+            router.get(route('tasks.index'), queryParams);
+        }else{
+            router.get(route('projects.show',project), queryParams);
+        }
 
     }
 
