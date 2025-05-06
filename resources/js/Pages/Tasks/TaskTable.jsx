@@ -5,7 +5,8 @@ import TextInput from "@/Components/TextInput"
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/Constants"
 import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({ tasks,queryParams = null}) {
+export default function TaskTable({ tasks,queryParams = null,showProject = true}) {
+        console.log(tasks);
 
         queryParams = queryParams || {};
 
@@ -51,6 +52,8 @@ export default function TaskTable({ tasks,queryParams = null}) {
                         <tr className="text-nowrap">
                             <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
                             <TableHeading name="Image_path" sortable={false}>Image</TableHeading>
+                            {showProject && <TableHeading name="project_id" sortable={false} >Project</TableHeading>}
+                            {/* <TableHeading name="name" sortField={false} >Project</TableHeading> */}
                             <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
                             <TableHeading name="status" sortable={false}>Status</TableHeading>
                             <TableHeading name="priority" sortable={false}>Priority</TableHeading>
@@ -67,11 +70,12 @@ export default function TaskTable({ tasks,queryParams = null}) {
                         <tr className="text-nowrap">
                             <th className="py-1"></th>
                             <th className="py-1"></th>
+                            {showProject && <th className="py-1"></th>}
                             <th className="py-1">
                                 <TextInput
                                     defaultValue={queryParams.name || ''}
                                     className="w-full"
-                                    placeholder="Project Name"
+                                    placeholder="Task Name"
                                     onBlur={(e) => searchFieldChanged('name', e.target.value)}
                                     onKeyPress={e => onKeyPress('name', e)}
                                 />
@@ -114,6 +118,7 @@ export default function TaskTable({ tasks,queryParams = null}) {
                                     <td className="px-3 py-3">
                                         <img src={task.image_path} alt="" style={{ width: 60 }} />
                                     </td>
+                                    {showProject && <td className="px-3 py-3">{task.project.name}</td>}
                                     <td className="px-3 py-3">{task.name}</td>
                                     <td className="px-3 py-3">
                                         <span className={"px-2 py-1 rounded text-white " + TASK_STATUS_CLASS_MAP[task.status]}>
