@@ -1,4 +1,5 @@
 import { BreadCrumb } from '@/Components/BreadCrumb';
+import PageHeading from '@/Components/PageHeading';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -20,9 +21,7 @@ export default function Create() {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Add User
-                </h2>
+                <PageHeading title={'Add User'} backBtn={true} backRoute={'users.index'}/>
             }
         >
             <Head title="Add User" />

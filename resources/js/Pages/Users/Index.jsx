@@ -1,3 +1,5 @@
+import { BreadCrumb } from "@/Components/BreadCrumb";
+import PageHeading from "@/Components/PageHeading";
 import Pagination from "@/Components/Pagination";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
@@ -66,20 +68,18 @@ export default function Index({ users, queryParams = null }) {
     return (
         <AuthenticatedLayout
             header={
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                        Users
-                    </h2>
-                    <Link className="flex items-center justify-between px-3 py-1 font-bold text-white transition-all rounded shadow bg-emerald-500 hover:bg-emerald-600" href={route('users.create')}>
-                        New User &nbsp; <PlusCircleIcon className="w-4" />
-                    </Link>
-                </div>
+                <PageHeading title={'Users'} btnTitle={'New User'} addBtn={true} addRoute={'users.create'}/>
             }
         >
             <Head title="Users" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <BreadCrumb>
+                        <li className="text-gray-500 dark:text-gray-400">
+                            Users
+                        </li>
+                    </BreadCrumb>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="pb-6 text-gray-900 dark:text-gray-100">
                             <div className="overflow-auto border border-gray-200 shadow-sm dark:border-gray-700">

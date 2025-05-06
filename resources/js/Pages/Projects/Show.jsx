@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import TaskTable from "../Tasks/TaskTable";
 import { BreadCrumb } from "@/Components/BreadCrumb";
+import PageHeading from "@/Components/PageHeading";
 
 export default function Show({ auth, project, tasks, queryParams }) {
     queryParams = queryParams || {};
@@ -14,9 +15,7 @@ export default function Show({ auth, project, tasks, queryParams }) {
         <AuthenticatedLayout
             user={auth.user}
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    {`Project - ${project.name}`}
-                </h2>
+                <PageHeading title={`Project - ${project.name} `} backBtn={true} backRoute={'projects.index'} />
             }
         >
             <Head title={`Project - ${project.name}`} />

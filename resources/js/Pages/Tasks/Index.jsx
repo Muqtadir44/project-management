@@ -2,15 +2,14 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import TaskTable from "./TaskTable";
 import { BreadCrumb } from "@/Components/BreadCrumb";
+import PageHeading from "@/Components/PageHeading";
 
 export default function Index({ tasks, queryParams = null }) {
 
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Tasks
-                </h2>
+                <PageHeading title={'Tasks'} btnTitle={'New Task'} addBtn={true} addRoute={'tasks.create'} />
             }
         >
             <Head title="Tasks" />
