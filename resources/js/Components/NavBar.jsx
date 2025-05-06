@@ -25,7 +25,7 @@ export default function NavBar() {
             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <NavLink
                     href={route('projects.index')}
-                    active={route().current('projects.index') || route().current('projects.create') || route().current('projects.edit') }
+                    active={route().current('projects.index') || route().current('projects.create') || route().current('projects.edit') || route().current('projects.show') }
                 >
                     Projects
                 </NavLink>
