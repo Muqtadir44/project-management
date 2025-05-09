@@ -34,9 +34,9 @@ export default function Create() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        // post(route('projects.store'), {
-        //     onSuccess: () => reset(),
-        // });
+        post(route('projects.store'), {
+            onSuccess: () => reset(),
+        });
     }
 
 
@@ -135,6 +135,7 @@ export default function Create() {
                                         <input
                                             id="project_image_path"
                                             type="file"
+                                            name="image"
                                             accept="image/*"
                                             className="hidden"
                                             onChange={handleImageChange}
