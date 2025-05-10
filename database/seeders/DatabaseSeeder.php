@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Designation;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\User;
@@ -19,8 +20,11 @@ class DatabaseSeeder extends Seeder
 
         Role::create([
          'role_name' =>   'Admin'
-        ]
-    );
+        ]);
+
+        Designation::create([
+            'designation_name' =>   'Head'
+        ]);
 
         User::factory()->create([
             'name' => 'Muqtadir',
@@ -28,7 +32,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('secret123'),
             'email_verified_at' => time(),
             'role_id' => 1,
-            'designation' => 'Admin'
+            'designation_id' => '1'
         ]);
 
         Project::factory()
