@@ -20,11 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -50,8 +46,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-    public function getCreatedAtAttribute($value)
+    // public function getCreatedAtAttribute($value)
+    // {
+    //     return date('d M Y',strtotime($value)); // ? this will format the created at column to an readable date format --
+    // }
+
+
+    public function role()
     {
-        return date('d M Y',strtotime($value)); // ? this will format the created at column to an readable date format --
+        return $this->hasOne(Role::class,'id','role_id');
+    }
+
+    public function designation()
+    {
+        return $this->hasOne(Designation::class,'id','designation_id');
     }
 }
