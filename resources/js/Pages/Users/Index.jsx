@@ -1,6 +1,7 @@
 import { BreadCrumb } from "@/Components/BreadCrumb";
 import PageHeading from "@/Components/PageHeading";
 import Pagination from "@/Components/Pagination";
+import StatusBadge from "@/Components/StatusBadge";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -8,6 +9,8 @@ import { PlusCircleIcon } from "@heroicons/react/16/solid";
 import { Head, Link, router } from "@inertiajs/react";
 
 export default function Index({ users, queryParams = null }) {
+    console.log(users);
+
     queryParams = queryParams || {};
     const searchFieldChanged = (name, value) => {
         console.log(name, value);
@@ -89,6 +92,9 @@ export default function Index({ users, queryParams = null }) {
                                             <TableHeading name="id" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>ID</TableHeading>
                                             <TableHeading name="name" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Name</TableHeading>
                                             <TableHeading name="email" sortable={false}>Email</TableHeading>
+                                            <TableHeading name="status" sortable={false}>Status</TableHeading>
+                                            <TableHeading name="role" sortable={false}>Role</TableHeading>
+                                            <TableHeading name="designation" sortable={false}>Designation</TableHeading>
                                             <TableHeading name="created_at" sortField={queryParams.sortField} sortOrder={queryParams.sortOrder} sortChanged={sortChanged}>Create Date</TableHeading>
                                             <TableHeading name="action" sortable={false}>Actions</TableHeading>
                                         </tr>
@@ -110,6 +116,9 @@ export default function Index({ users, queryParams = null }) {
                                             <th className="px-4 py-2"></th>
                                             <th className="px-4 py-2"></th>
                                             <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2"></th>
                                         </tr>
                                     </thead>
 
@@ -123,6 +132,9 @@ export default function Index({ users, queryParams = null }) {
                                                     </Link>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm text-nowrap">{user.email}</td>
+                                                <td className="px-4 py-4 text-sm text-nowrap"><StatusBadge status={user.status} /> </td>
+                                                <td className="px-4 py-4 text-sm text-nowrap">{user.role.role_name}</td>
+                                                <td className="px-4 py-4 text-sm text-nowrap">{user.designation.designation_name}</td>
                                                 <td className="px-4 py-4 text-sm">{user.created_at}</td>
                                                 <td className="px-4 py-4 space-x-2 text-sm">
                                                     <Link href={route('users.edit', user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
