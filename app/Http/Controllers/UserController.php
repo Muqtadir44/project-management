@@ -1,7 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Designation;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +20,11 @@ class UserController extends Controller
 
         $query = User::query();
 
-        $sortField = request("sortField","created_at");
-        $sortOrder = request("sortOrder","desc");
+        $sortField = request("sortField", "created_at");
+        $sortOrder = request("sortOrder", "desc");
 
-        if(request("name")){
-            $query->where("name", "like", "%".request("name")."%");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
         }
 
         // if(request("status")){
@@ -29,8 +32,10 @@ class UserController extends Controller
         // }
 
         $users = $query
-                    ->orderBy($sortField, $sortOrder)
-                    ->paginate(10)->onEachSide(5);
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)->onEachSide(5);
+
+        // dd($users);
 
         return Inertia::render('Users/Index', props: [
             'users' => UserResource::collection($users),
@@ -43,24 +48,37 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Users/Create');
+
+        $roles = Role::Active();
+        $designations = Designation::Active();
+
+
+        return Inertia::render('Users/Create', ['roles' => $roles, 'designations' => $designations]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-        ]);
+        $data = $request->validated();
+
+        // dd($data);
+
+        $picture = $data['picture'] ?? null;
+        if($picture){
+            $picture = $picture->store('users','public');
+        }
+
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'status' => $data['status'],
+            'role_id' => $data['role'],
+            'designation_id' => $data['designation'],
+            'picture'=>$picture
         ]);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
@@ -112,19 +130,22 @@ class UserController extends Controller
 
         // Basic info validation
         $validatedData = $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
         ]);
 
         // If password fields are filled, validate them
         if ($request->filled('current_password') || $request->filled('password')) {
             $request->validate([
-                'current_password' => ['required', function ($attribute, $value, $fail) use ($user) {
-                    if (! Hash::check($value, $user->password)) {
-                        $fail('The current password is incorrect.');
+                'current_password' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($user) {
+                        if (!Hash::check($value, $user->password)) {
+                            $fail('The current password is incorrect.');
+                        }
                     }
-                }],
-                'password'         => 'required|string|min:8|confirmed',
+                ],
+                'password' => 'required|string|min:8|confirmed',
             ]);
 
             $validatedData['password'] = bcrypt($request->password);
