@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,11 +17,18 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        Role::create([
+         'role_name' =>   'Admin'
+        ]
+    );
+
         User::factory()->create([
             'name' => 'Muqtadir',
             'email' => 'muqtadir@gmail.com',
             'password' => bcrypt('secret123'),
             'email_verified_at' => time(),
+            'role_id' => 1,
+            'designation' => 'Admin'
         ]);
 
         Project::factory()
