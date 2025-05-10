@@ -22,6 +22,9 @@ class UserResource extends JsonResource
             "id" => $this->id,
             "name" => $this->name,
             "email" => $this->email,
+            'status' => $this->status,
+            'designation' => new DesignationResource($this->designation),
+            'role'=> new RoleResource($this->role),
             'created_at' => (new Carbon($this->created_at))->format('d-M-Y'),
         ];
     }
