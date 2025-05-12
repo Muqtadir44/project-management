@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Designation;
 use App\Models\Role;
@@ -97,9 +98,16 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+
+        $roles = Role::get();
+        $designations = Designation::get();
+
+
         $user = User::findOrFail($id);
         return Inertia::render('Users/Edit', props: [
             'user' => $user,
+            'roles' => $roles,
+            'designations' => $designations
         ]);
 
     }
@@ -124,37 +132,66 @@ class UserController extends Controller
     //     return redirect()->route('users.index')->with('success', 'User updated successfully.');
     // }
 
-    public function update(Request $request, string $id)
+    // public function update(Request $request, string $id)
+    // {
+    //     $user = User::findOrFail($id);
+
+    //     // Basic info validation
+    //     $validatedData = $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'email' => 'required|email|unique:users,email,' . $id,
+    //     ]);
+
+    //     // If password fields are filled, validate them
+    //     if ($request->filled('current_password') || $request->filled('password')) {
+    //         $request->validate([
+    //             'current_password' => [
+    //                 'required',
+    //                 function ($attribute, $value, $fail) use ($user) {
+    //                     if (!Hash::check($value, $user->password)) {
+    //                         $fail('The current password is incorrect.');
+    //                     }
+    //                 }
+    //             ],
+    //             'password' => 'required|string|min:8|confirmed',
+    //         ]);
+
+    //         $validatedData['password'] = bcrypt($request->password);
+    //     }
+
+    //     $user->update($validatedData);
+
+    //     return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    // }
+
+
+    public function update(UpdateUserRequest $request,User  $user)
     {
-        $user = User::findOrFail($id);
+        $data = $request->validated();
 
-        // Basic info validation
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-        ]);
-
-        // If password fields are filled, validate them
-        if ($request->filled('current_password') || $request->filled('password')) {
-            $request->validate([
-                'current_password' => [
-                    'required',
-                    function ($attribute, $value, $fail) use ($user) {
-                        if (!Hash::check($value, $user->password)) {
-                            $fail('The current password is incorrect.');
-                        }
-                    }
-                ],
-                'password' => 'required|string|min:8|confirmed',
-            ]);
-
-            $validatedData['password'] = bcrypt($request->password);
+        $picture = $data['picture'] ?? null;
+        
+        if($picture){
+            $picture = $picture->store('users','public');
+        }else{
+            $picture = $user->picture;
         }
 
-        $user->update($validatedData);
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+
+        $user->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'] ?? bcrypt($data['password']),
+            'status' => $data['status'],
+            'role_id' => $data['role'],
+            'designation_id' => $data['designation'],
+            'picture'=>$picture
+        ]);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
+
 
     /**
      * Remove the specified resource from storage.
