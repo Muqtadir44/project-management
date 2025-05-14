@@ -6,8 +6,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Edit({ user, roles, designations }) {
-    console.log(roles);
-    console.log(designations);
+    // console.log(roles);
+    // console.log(designations);
 
 
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -20,10 +20,12 @@ export default function Edit({ user, roles, designations }) {
         designation: user.designation_id || '',
         picture: ''
     });
-    console.log(data);
+    // console.log(data);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log('after submit',data);
+
         put(route('users.update',user.id), {
             onSuccess: () => reset(),
         });
