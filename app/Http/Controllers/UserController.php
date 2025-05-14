@@ -169,14 +169,27 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $picture = $data['picture'] ?? null;
-        
-        if($picture){
-            $picture = $picture->store('users','public');
-        }else{
-            $picture = $user->picture;
-        }
+        // $picture = $data['picture'] ?? null;
 
+        // if($picture){
+        //     $picture = $picture->store('users','public');
+        // }else{
+        //     $picture = $user->picture;
+        // }
+
+         // Handle Picture
+    if (isset($data['picture']) && $data['picture']) {
+        $picture = $data['picture']->store('users', 'public');
+    } else {
+        $picture = $user->picture;
+    }
+
+    // Handle Password
+    if (isset($data['password']) && $data['password']) {
+        $password = bcrypt($data['password']);
+    } else {
+        $password = $user->password; // keep existing password
+    }
 
 
         $user->update([
