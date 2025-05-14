@@ -28,12 +28,12 @@ class UpdateUserRequest extends FormRequest
             'required',
             'email',
             Rule::unique('users', 'email')->ignore($this->user),
-        ],
+            ],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'status' => ['required', Rule::in(['1', '0'])],
             'role' => ['required', Rule::exists('roles', 'id')],
             'designation' => ['required', Rule::exists('designations', 'id')],
-            'picture' => ['nullable','image','mimes:jpeg,png,jpg','max:2048'],
+            // 'picture' => ['nullable','image','mimes:jpeg,png,jpg','max:2048'],
         ];
     }
 }
