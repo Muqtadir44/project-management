@@ -31,6 +31,28 @@ export default function Edit({ user, roles, designations }) {
         });
     };
 
+//     const { data, setData, put, processing, errors, reset } = useForm({
+//     name: user.name || '',
+//     email: user.email || '',
+//     password: '',
+//     password_confirmation: '',
+//     status: String(user.status ?? ''),
+//     role: user.role_id || '',
+//     designation: user.designation_id || '',
+//     picture: null // Initialize picture as null
+// });
+
+// const handleSubmit = (e) => {
+//     e.preventDefault();
+//     put(route('users.update', user.id), {
+//         ...data,
+//         _method: 'put', // Add _method=PUT
+//     }, {
+//         forceFormData: true, // Force FormData conversion
+//         onSuccess: () => reset(),
+//     });
+// };
+
     return (
         <AuthenticatedLayout
             header={
@@ -65,7 +87,7 @@ export default function Edit({ user, roles, designations }) {
                                     <label className="block mb-1 text-sm font-medium">Name</label>
                                     <input
                                         type="text"
-                                        value={user.name}
+                                        value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
                                     />
@@ -77,7 +99,7 @@ export default function Edit({ user, roles, designations }) {
                                     <label className="block mb-1 text-sm font-medium">Email</label>
                                     <TextInput
                                         type="email"
-                                        value={user.email}
+                                        value={data.email}
                                         onChange={(e) => setData('email', e.target.value)}
                                         className="w-full px-3 py-2 border border-gray-300 rounded dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
                                     />
@@ -138,7 +160,7 @@ export default function Edit({ user, roles, designations }) {
 
 
                                 {/* Profile Picture Upload */}
-                                   <div className="md:col-span-2">
+                                <div className="md:col-span-2">
                                     <label className="block mb-1 text-sm font-medium">Profile Picture</label>
                                     <input
                                         type="file"
