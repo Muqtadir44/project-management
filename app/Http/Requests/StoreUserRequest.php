@@ -24,7 +24,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => ['required','string','max:255'],
-            'email' => ['required','email'],
+            'email' => ['required','email',Rule::unique('users', 'email')],
             'password' => ['required','string','min:8'],
             'status'=> ['required',Rule::in(['1','0'])],
             'role' => ['required', Rule::exists('roles', 'id')],
