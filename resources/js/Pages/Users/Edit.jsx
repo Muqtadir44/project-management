@@ -10,7 +10,7 @@ export default function Edit({ user, roles, designations }) {
     // console.log(designations);
 
 
-    const { data, setData, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         name: user.name || '',
         email: user.email || '',
         password: '',
@@ -18,7 +18,8 @@ export default function Edit({ user, roles, designations }) {
         status: String(user.status ?? ''),
         role: user.role_id || '',
         designation: user.designation_id || '',
-        picture: ''
+        picture: '',
+        _method: 'PUT',
     });
     // console.log(data);
 
@@ -26,7 +27,7 @@ export default function Edit({ user, roles, designations }) {
         e.preventDefault();
         console.log('after submit',data);
 
-        put(route('users.update',user.id), {
+        post(route('users.update',user.id), {
             onSuccess: () => reset(),
         });
     };
