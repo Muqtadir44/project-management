@@ -5,9 +5,10 @@ import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/Constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
-import { PlusCircleIcon } from '@heroicons/react/16/solid'
 import { BreadCrumb } from "@/Components/BreadCrumb";
 import PageHeading from "@/Components/PageHeading";
+import { DeleteModal } from "@/Components/DeleteModal";
+import { useState } from 'react';
 
 export default function Index({ projects, queryParams = null, success }) {
 
@@ -43,7 +44,14 @@ export default function Index({ projects, queryParams = null, success }) {
         }
         console.log(queryParams);
         router.get(route('projects.index'), queryParams);
+    }
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+
+    const deleteProject = (id) => {
+        setDeleteId(id);
+        setShowDeleteModal(true);
     }
 
     return (
@@ -171,7 +179,7 @@ export default function Index({ projects, queryParams = null, success }) {
                                                 <td className="px-4 py-4">{project.created_by.name}</td>
                                                 <td className="px-4 py-4 space-x-2">
                                                     <Link href={route('projects.edit', project.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                                    <Link href={route('projects.destroy', project.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
+                                                    <p onClick={(e) => deleteProject(project.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</p>
                                                 </td>
                                             </tr>
                                         ))}
@@ -184,7 +192,14 @@ export default function Index({ projects, queryParams = null, success }) {
 
                     </div>
                 </div>
+                <DeleteModal
+                    show={showDeleteModal}
+                    deleteId={deleteId}
+                    deleteRoute={'projects.destroy'}
+                    onClose={() => setShowDeleteModal(false)}
+                />
             </div>
+
         </AuthenticatedLayout>
     )
 }
