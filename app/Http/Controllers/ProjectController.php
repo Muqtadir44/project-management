@@ -9,6 +9,7 @@ use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -138,6 +139,13 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+
+    if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+        Storage::disk('public')->delete($project->image_path);
+    }
+
+    $project->delete();
+
+    return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
     }
 }
