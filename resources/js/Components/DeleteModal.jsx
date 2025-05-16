@@ -1,8 +1,20 @@
 import Modal from '@/Components/Modal';
 import SecondaryButton from './SecondaryButton';
 import DangerButton from './DangerButton';
+import { router } from '@inertiajs/react';
 
-export function DeleteModal({ show, onClose, onConfirm }) {
+export function DeleteModal({ show, deleteId, deleteRoute, onClose }) {
+
+    const deleteRecord = (deleteId, deleteRoute) => {
+        router.delete(route(deleteRoute, deleteId), {
+            onSuccess: () => closeModal(),
+        });
+    }
+
+    const closeModal = () => {
+        onClose();
+    }
+
     return (
         <Modal show={show} onClose={onClose}>
             <div className="p-6">
@@ -18,7 +30,7 @@ export function DeleteModal({ show, onClose, onConfirm }) {
                         Cancel
                     </SecondaryButton>
 
-                    <DangerButton className="ml-3" onClick={onConfirm}>
+                    <DangerButton className="ml-3" onClick={() => deleteRecord(deleteId, deleteRoute)}>
                         Delete
                     </DangerButton>
                 </div>
