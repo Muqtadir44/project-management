@@ -27,6 +27,7 @@
         "datatables.net-dt": "^2.2.2",
         "jquery": "^3.7.1",
         "lucide-react": "^0.488.0",
-        "react-data-table-component": "^7.7.0"
+        "react-data-table-component": "^7.7.0",
+        "toastr": "^2.1.4"
     }
 }
