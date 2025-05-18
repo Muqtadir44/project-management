@@ -21,22 +21,22 @@ class ProjectController extends Controller
     {
         $query = Project::query();
 
-        $sortField = request("sortField","created_at");
-        $sortOrder = request("sortOrder","desc");
+        $sortField = request("sortField", "created_at");
+        $sortOrder = request("sortOrder", "desc");
 
-        if(request("name")){
-            $query->where("name", "like", "%".request("name")."%");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
         }
 
-        if(request("status")){
+        if (request("status")) {
             $query->where("status", request("status"));
         }
 
         $projects = $query
-                    ->orderBy($sortField, $sortOrder)
-                    ->paginate(10)->onEachSide(5);
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)->onEachSide(5);
 
-        return Inertia::render("Projects/Index",[
+        return Inertia::render("Projects/Index", [
             "projects" => ProjectResource::collection($projects),
             "queryParams" => request()->query() ?: null,
             "success" => session("success"),
@@ -66,8 +66,8 @@ class ProjectController extends Controller
 
 
         $image = $data['image'] ?? null;
-        if($image){
-            $image = $image->store('projects','public');
+        if ($image) {
+            $image = $image->store('projects', 'public');
         }
 
 
@@ -91,24 +91,24 @@ class ProjectController extends Controller
     {
         $query = $project->tasks();
 
-        $sortField = request("sortField","created_at");
-        $sortOrder = request("sortOrder","desc");
+        $sortField = request("sortField", "created_at");
+        $sortOrder = request("sortOrder", "desc");
 
-        if(request("name")){
-            $query->where("name", "like", "%".request("name")."%");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
         }
 
-        if(request("status")){
+        if (request("status")) {
             $query->where("status", request("status"));
         }
 
-        if(request("priority")){
+        if (request("priority")) {
             $query->where("priority", request("priority"));
         }
 
         $tasks = $query
-                    ->orderBy($sortField, $sortOrder)
-                    ->paginate(10)->onEachSide(5);
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)->onEachSide(5);
 
         return Inertia::render("Projects/Show", [
             "project" => new ProjectResource($project),
@@ -140,12 +140,12 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
 
-    if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
-        Storage::disk('public')->delete($project->image_path);
-    }
+        if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+            Storage::disk('public')->delete($project->image_path);
+        }
 
-    $project->delete();
+        $project->delete();
 
-    return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+        return redirect()->route('projects.index')->with('success', 'Project deleted.');
     }
 }
