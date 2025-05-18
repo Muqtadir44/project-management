@@ -3,15 +3,30 @@ import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/Constants";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import TableHeading from "@/Components/TableHeading";
 import { BreadCrumb } from "@/Components/BreadCrumb";
 import PageHeading from "@/Components/PageHeading";
 import { DeleteModal } from "@/Components/DeleteModal";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import 'toastr/build/toastr.min.css';
+import toastr from 'toastr';
 
-export default function Index({ projects, queryParams = null, success }) {
 
+
+export default function Index({ projects, queryParams = null }) {
+
+    const flash = usePage().props.flash || {};
+
+    useEffect(() => {
+        if (flash.success) {
+            toastr.success(flash.success);
+        }
+
+        if (flash.err) {
+            toastr.error(flash.err);
+        }
+    }, [flash]);
     queryParams = queryParams || {};
 
     const searchFieldChanged = (name, value) => {
@@ -71,41 +86,6 @@ export default function Index({ projects, queryParams = null, success }) {
                         </li>
                     </BreadCrumb>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                        {success && (
-                            <div
-                                id="success-alert"
-                                className="flex items-center justify-between p-4 mb-4 text-sm text-green-700 bg-green-100 border border-green-300 rounded-lg dark:text-green-200 dark:bg-green-800 dark:border-green-700"
-                                role="alert"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <svg className="flex-shrink-0 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                    <span>{success}</span>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => document.getElementById('success-alert')?.remove()}
-                                    className="inline-flex items-center justify-center w-5 h-5 text-green-700 transition-colors duration-200 rounded hover:bg-green-200 dark:text-green-200 dark:hover:bg-green-700"
-                                    aria-label="Close"
-                                >
-                                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </button>
-                            </div>
-                        )}
-
-
-
                         <div className="pb-6 text-gray-900 dark:text-gray-100">
                             <div className="overflow-auto border border-gray-200 shadow-sm dark:border-gray-700">
                                 <table className="min-w-full text-sm text-left text-gray-500 dark:text-gray-400">
