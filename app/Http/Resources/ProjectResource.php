@@ -16,7 +16,7 @@ class ProjectResource extends JsonResource
      */
 
     public static $wrap = false; // Disable wrapping the resource in a data key
-    
+
     public function toArray(Request $request): array
     {
         return [
@@ -28,6 +28,7 @@ class ProjectResource extends JsonResource
             'created_by' =>  new UserResource($this->createdBy),
             'updated_by' => new UserResource($this->updatedBy),
             'due_date' => (new Carbon($this->created_at))->format('d-M-Y'),
+            'dueDate' =>(new Carbon($this->created_at))->format('Y-m-d'),
             'created_at' => (new Carbon($this->updated_at))->format('d-M-Y'),
         ];
     }
