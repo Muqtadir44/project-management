@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -67,8 +68,8 @@ class UserController extends Controller
         // dd($data);
 
         $picture = $data['picture'] ?? null;
-        if($picture){
-            $picture = $picture->store('users','public');
+        if ($picture) {
+            $picture = $picture->store('users', 'public');
         }
 
 
@@ -79,7 +80,7 @@ class UserController extends Controller
             'status' => $data['status'],
             'role_id' => $data['role'],
             'designation_id' => $data['designation'],
-            'picture'=>$picture
+            'picture' => $picture
         ]);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
@@ -115,81 +116,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, string $id)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email,' . $id,
-    //         'password' => 'required|string|min:8',
-    //     ]);
-
-    //     User::find($id)->update([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => bcrypt($request->password),
-    //     ]);
-
-    //     return redirect()->route('users.index')->with('success', 'User updated successfully.');
-    // }
-
-    // public function update(Request $request, string $id)
-    // {
-    //     $user = User::findOrFail($id);
-
-    //     // Basic info validation
-    //     $validatedData = $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email,' . $id,
-    //     ]);
-
-    //     // If password fields are filled, validate them
-    //     if ($request->filled('current_password') || $request->filled('password')) {
-    //         $request->validate([
-    //             'current_password' => [
-    //                 'required',
-    //                 function ($attribute, $value, $fail) use ($user) {
-    //                     if (!Hash::check($value, $user->password)) {
-    //                         $fail('The current password is incorrect.');
-    //                     }
-    //                 }
-    //             ],
-    //             'password' => 'required|string|min:8|confirmed',
-    //         ]);
-
-    //         $validatedData['password'] = bcrypt($request->password);
-    //     }
-
-    //     $user->update($validatedData);
-
-    //     return redirect()->route('users.index')->with('success', 'User updated successfully.');
-    // }
-
-
-    public function update(UpdateUserRequest $request,User  $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $data = $request->validated();
 
-        // $picture = $data['picture'] ?? null;
+        // Handle Picture
+        if (isset($data['picture']) && $data['picture']) {
+            if ($user->image_path && Storage::disk('public')->exists($user->image_path)) {
+                Storage::disk('public')->delete($user->image_path);
+            }
+            $picture = $data['picture']->store('users', 'public');
+        } else {
+            $picture = $user->picture;
+        }
 
-        // if($picture){
-        //     $picture = $picture->store('users','public');
-        // }else{
-        //     $picture = $user->picture;
+        // Handle Password
+        // if (isset($data['password']) && $data['password']) {
+        //     $password = bcrypt($data['password']);
+        // } else {
+        //     $password = $user->password; // keep existing password
         // }
-
-         // Handle Picture
-    if (isset($data['picture']) && $data['picture']) {
-        $picture = $data['picture']->store('users', 'public');
-    } else {
-        $picture = $user->picture;
-    }
-
-    // Handle Password
-    if (isset($data['password']) && $data['password']) {
-        $password = bcrypt($data['password']);
-    } else {
-        $password = $user->password; // keep existing password
-    }
 
 
         $user->update([
@@ -199,7 +145,7 @@ class UserController extends Controller
             'status' => $data['status'],
             'role_id' => $data['role'],
             'designation_id' => $data['designation'],
-            'picture'=>$picture
+            'picture' => $picture
         ]);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully');
