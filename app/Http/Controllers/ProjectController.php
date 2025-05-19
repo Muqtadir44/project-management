@@ -123,7 +123,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return Inertia::render('Projects/Edit', ['project' => new ProjectResource($project)]);
     }
 
     /**
@@ -131,7 +131,32 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $data = $request->validated();
+        // dd($data);
+
+
+        $data['updated_by'] = Auth::id();
+
+
+        $image = $data['image'] ?? null;
+        if ($image) {
+            if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+                Storage::disk('public')->delete($project->image_path);
+            }
+            $image = $image->store('projects', 'public');
+        }
+
+
+        $project->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'due_date' => $data['due_date'],
+            'status' => $data['status'],
+            'image_path' => $image,
+            'updated_by' => Auth::id(),
+        ]);
+
+        return to_route('projects.index')->with('success', 'Project updated successfully');
     }
 
     /**
