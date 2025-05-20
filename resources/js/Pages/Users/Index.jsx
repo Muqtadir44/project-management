@@ -71,7 +71,7 @@ export default function Index({ users, queryParams = null }) {
     return (
         <AuthenticatedLayout
             header={
-                <PageHeading title={'Users'} btnTitle={'New User'} addBtn={true} addRoute={'users.create'}/>
+                <PageHeading title={'Users'} btnTitle={'New User'} addBtn={true} addRoute={'users.create'} />
             }
         >
             <Head title="Users" />
@@ -113,7 +113,15 @@ export default function Index({ users, queryParams = null }) {
                                                     onKeyPress={e => onKeyPress('name', e)}
                                                 />
                                             </th>
-                                            <th className="px-4 py-2"></th>
+                                            <th className="px-4 py-2">
+                                                 <TextInput
+                                                    defaultValue={queryParams.email || ''}
+                                                    className="w-full"
+                                                    placeholder="Email"
+                                                    onBlur={(e) => searchFieldChanged('email', e.target.value)}
+                                                    onKeyPress={e => onKeyPress('email', e)}
+                                                />
+                                            </th>
                                             <th className="px-4 py-2"></th>
                                             <th className="px-4 py-2"></th>
                                             <th className="px-4 py-2"></th>
@@ -126,15 +134,31 @@ export default function Index({ users, queryParams = null }) {
                                         {users.data.map((user) => (
                                             <tr key={user.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <td className="px-4 py-4 text-sm">{user.id}</td>
-                                                <td className="px-4 py-4 font-medium text-gray-900 dark:text-white hover:underline">
-                                                    <Link href={route('users.show', user.id)}>
-                                                        {user.name}
-                                                    </Link>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center gap-3">
+                                                        <img
+                                                            className="object-cover w-10 h-10 rounded-full"
+                                                            src={user.picture || '/default-avatar.png'}
+                                                            alt={user.name}
+                                                        />
+                                                        <div>
+                                                            <div className="font-medium text-gray-900 dark:text-white">{user.name}</div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm text-nowrap">{user.email}</td>
-                                                <td className="px-4 py-4 text-sm text-nowrap"><StatusBadge status={user.status} /> </td>
-                                                <td className="px-4 py-4 text-sm text-nowrap">{user.role.role_name}</td>
-                                                <td className="px-4 py-4 text-sm text-nowrap">{user.designation.designation_name}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <StatusBadge status={user.status} />
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                                    {user.role.role_name}
+                                                </td>
+
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                                        {user.title || user.designation?.designation_name || '—'}
+                                                    </div>
+                                                </td>
                                                 <td className="px-4 py-4 text-sm">{user.created_at}</td>
                                                 <td className="px-4 py-4 space-x-2 text-sm">
                                                     <Link href={route('users.edit', user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
@@ -143,12 +167,12 @@ export default function Index({ users, queryParams = null }) {
                                             </tr>
                                         ))}
                                     </tbody>
+
                                 </table>
                             </div>
 
                             <Pagination links={users.meta.links} />
                         </div>
-
                     </div>
                 </div>
             </div>
