@@ -1,25 +1,39 @@
 import { BreadCrumb } from "@/Components/BreadCrumb";
+import { DeleteModal } from "@/Components/DeleteModal";
 import PageHeading from "@/Components/PageHeading";
 import Pagination from "@/Components/Pagination";
 import StatusBadge from "@/Components/StatusBadge";
 import TableHeading from "@/Components/TableHeading";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { PlusCircleIcon } from "@heroicons/react/16/solid";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
+import { useState, useEffect } from "react";
+import 'toastr/build/toastr.min.css';
+import toastr from 'toastr';
 
 export default function Index({ users, queryParams = null }) {
-    console.log(users);
+
+    const flash = usePage().props.flash || {};
+
+    useEffect(() => {
+        if (flash.success) {
+            toastr.success(flash.success);
+        }
+
+        if (flash.err) {
+            toastr.error(flash.err);
+        }
+    }, [flash]);
 
     queryParams = queryParams || {};
     const searchFieldChanged = (name, value) => {
-        console.log(name, value);
+
         if (value) {
             queryParams[name] = value;
         } else {
             delete queryParams[name];
         }
-        console.log(queryParams);
+
         router.get(route('users.index'), queryParams);
     }
 
@@ -40,33 +54,16 @@ export default function Index({ users, queryParams = null }) {
             queryParams.sortField = name;
             queryParams.sortOrder = 'asc';
         }
-        console.log(queryParams);
         router.get(route('users.index'), queryParams);
-
     }
 
-    const emps = [
-        {
-            id: 1,
-            name: 'Lindsay Walton',
-            email: 'lindsay.walton@example.com',
-            title: 'Front-end Developer',
-            department: 'Optimization',
-            status: 'Active',
-            role: 'Member',
-            imageUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-        },
-        {
-            id: 2,
-            name: 'Courtney Henry',
-            email: 'courtney.henry@example.com',
-            title: 'Designer',
-            department: 'Intranet',
-            status: 'Active',
-            role: 'Admin',
-            imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
-        },
-    ];
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+
+    const deleteProject = (id) => {
+        setDeleteId(id);
+        setShowDeleteModal(true);
+    }
 
     return (
         <AuthenticatedLayout
@@ -114,7 +111,7 @@ export default function Index({ users, queryParams = null }) {
                                                 />
                                             </th>
                                             <th className="px-4 py-2">
-                                                 <TextInput
+                                                <TextInput
                                                     defaultValue={queryParams.email || ''}
                                                     className="w-full"
                                                     placeholder="Email"
@@ -138,7 +135,7 @@ export default function Index({ users, queryParams = null }) {
                                                     <div className="flex items-center gap-3">
                                                         <img
                                                             className="object-cover w-10 h-10 rounded-full"
-                                                            src={user.picture || '/default-avatar.png'}
+                                                            src={user.picture}
                                                             alt={user.name}
                                                         />
                                                         <div>
@@ -162,7 +159,7 @@ export default function Index({ users, queryParams = null }) {
                                                 <td className="px-4 py-4 text-sm">{user.created_at}</td>
                                                 <td className="px-4 py-4 space-x-2 text-sm">
                                                     <Link href={route('users.edit', user.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                                    <Link href={route('users.destroy', user.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
+                                                    <p onClick={(e) => deleteProject(user.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</p>
                                                 </td>
                                             </tr>
                                         ))}
@@ -175,6 +172,12 @@ export default function Index({ users, queryParams = null }) {
                         </div>
                     </div>
                 </div>
+                <DeleteModal
+                    show={showDeleteModal}
+                    deleteId={deleteId}
+                    deleteRoute={'users.destroy'}
+                    onClose={() => setShowDeleteModal(false)}
+                />
             </div>
         </AuthenticatedLayout>
     )
