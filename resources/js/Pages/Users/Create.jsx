@@ -6,9 +6,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Create({ roles, designations }) {
-    console.log(roles);
-    console.log(designations);
-
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
