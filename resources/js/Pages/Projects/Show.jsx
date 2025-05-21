@@ -7,10 +7,7 @@ import PageHeading from "@/Components/PageHeading";
 
 export default function Show({ auth, project, tasks, queryParams }) {
     queryParams = queryParams || {};
-    console.log(tasks);
-    console.log(project);
-
-
+   
     return (
         <AuthenticatedLayout
             user={auth.user}

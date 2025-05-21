@@ -10,9 +10,9 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Edit({ project }) {
+
     const [imagePreview, setImagePreview] = useState(null);
 
-    console.log(project);
     const { data, setData, post, processing, errors, reset } = useForm({
         'name': project.name || '',
         'image': '',
