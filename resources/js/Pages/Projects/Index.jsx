@@ -30,13 +30,11 @@ export default function Index({ projects, queryParams = null }) {
     queryParams = queryParams || {};
 
     const searchFieldChanged = (name, value) => {
-        console.log(name, value);
         if (value) {
             queryParams[name] = value;
         } else {
             delete queryParams[name];
         }
-        console.log(queryParams);
         router.get(route('projects.index'), queryParams);
     }
 
@@ -57,7 +55,6 @@ export default function Index({ projects, queryParams = null }) {
             queryParams.sortField = name;
             queryParams.sortOrder = 'asc';
         }
-        console.log(queryParams);
         router.get(route('projects.index'), queryParams);
     }
 
