@@ -6,6 +6,9 @@ use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Models\Project;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -48,7 +51,9 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        $projects = Project::all()->pluck("name", "id");
+        $users  = User::all()->pluck("name", "id");
+        return inertia("Tasks/Create",['projects' => $projects,'users' => $users]); 
     }
 
     /**
@@ -56,7 +61,32 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+         $data = $request->validated();
+        // dd($data);
+
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
+
+
+        $image = $data['image'] ?? null;
+        if ($image) {
+            $image = $image->store('projects', 'public');
+        }
+
+
+        Project::create([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'due_date' => $data['due_date'],
+            'status' => $data['status'],
+            'priority' => $data['priority'],
+            'image_path' => $image,
+            'project_id' => $data['project'],
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
+        ]);
+
+        return to_route('projects.index')->with('success', 'Project created successfully');
     }
 
     /**
@@ -64,7 +94,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+            //    return inertia("Tasks/Show");
     }
 
     /**
@@ -72,7 +102,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return inertia("Tasks/Edit",["task", TaskResource::make($task)]);
     }
 
     /**
