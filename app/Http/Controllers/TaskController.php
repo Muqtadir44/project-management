@@ -75,7 +75,7 @@ class TaskController extends Controller
         }
 
 
-        Project::create([
+        Task::create([
             'name' => $data['name'],
             'description' => $data['description'],
             'due_date' => $data['due_date'],
@@ -83,6 +83,7 @@ class TaskController extends Controller
             'priority' => $data['priority'],
             'image_path' => $image,
             'project_id' => $data['project'],
+            'assigned_user_id' => $data['user'],
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
         ]);
