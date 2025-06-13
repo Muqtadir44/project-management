@@ -9,6 +9,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -53,7 +54,7 @@ class TaskController extends Controller
     {
         $projects = Project::all()->pluck("name", "id");
         $users  = User::all()->pluck("name", "id");
-        return inertia("Tasks/Create",['projects' => $projects,'users' => $users]); 
+        return inertia("Tasks/Create",['projects' => $projects,'users' => $users]);
     }
 
     /**
@@ -70,7 +71,7 @@ class TaskController extends Controller
 
         $image = $data['image'] ?? null;
         if ($image) {
-            $image = $image->store('projects', 'public');
+            $image = $image->store('tasks', 'public');
         }
 
 
@@ -86,7 +87,7 @@ class TaskController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return to_route('projects.index')->with('success', 'Project created successfully');
+        return to_route('tasks.index')->with('success', 'Task created successfully');
     }
 
     /**
@@ -102,6 +103,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
+        $projects = Project::get();
+        $users = User::get();
+
         return inertia("Tasks/Edit",["task", TaskResource::make($task)]);
     }
 
@@ -118,6 +122,12 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+         if ($task->image_path && Storage::disk('public')->exists($task->image_path)) {
+            Storage::disk('public')->delete($task->image_path);
+        }
+
+        $task->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Task deleted.');
     }
 }
