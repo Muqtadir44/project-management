@@ -1,12 +1,27 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link} from "@inertiajs/react";
 import TaskTable from "./TaskTable";
 import { BreadCrumb } from "@/Components/BreadCrumb";
 import PageHeading from "@/Components/PageHeading";
+import { useState,useEffect } from 'react';
+import 'toastr/build/toastr.min.css';
+import toastr from 'toastr';
 
 export default function Index({ tasks, queryParams = null }) {
 
-    return (
+    const flash = usePage().props.flash || {};
+
+    useEffect(() => {
+        if (flash.success) {
+            toastr.success(flash.success);
+        }
+
+        if (flash.err) {
+            toastr.error(flash.err);
+        }
+    }, [flash]);
+
+   return (
         <AuthenticatedLayout
             header={
                 <PageHeading title={'Tasks'} btnTitle={'New Task'} addBtn={true} addRoute={'tasks.create'} />
