@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class TaskResource extends JsonResource
 {
@@ -20,9 +21,9 @@ class TaskResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'project' => new ProjectResource($this->project),
+            'project' => new ProjectResource($this->project) ?? 'N/A',
             'name' => $this->name,
-            'image_path' => $this->image_path,
+            'image_path' => $this->image_path ? Storage::url($this->image_path) : 'https://placehold.co/600x400?text=Hello\nWorld' ,
             'description' => $this->description,
             'status' => $this->status,
             'priority' => $this->priority,
