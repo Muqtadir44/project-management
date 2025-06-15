@@ -4,10 +4,21 @@ import { Head, Link } from "@inertiajs/react";
 import TaskTable from "../Tasks/TaskTable";
 import { BreadCrumb } from "@/Components/BreadCrumb";
 import PageHeading from "@/Components/PageHeading";
+import { DeleteModal } from "@/Components/DeleteModal";
+import { useState } from "react";
 
 export default function Show({ auth, project, tasks, queryParams }) {
     queryParams = queryParams || {};
-   
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
+
+    const deleteTask = (id) => {
+        setDeleteId(id);
+        setShowDeleteModal(true);
+    }
+
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -107,10 +118,16 @@ export default function Show({ auth, project, tasks, queryParams }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
                         <div className="text-gray-900 dark:text-gray-100">
-                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false} project={project.id} />
+                            <TaskTable tasks={tasks} queryParams={queryParams} showProject={false} project={project.id} deleteTask={deleteTask} />
                         </div>
                     </div>
                 </div>
+                <DeleteModal
+                    show={showDeleteModal}
+                    deleteId={deleteId}
+                    deleteRoute={'tasks.destroy'}
+                    onClose={() => setShowDeleteModal(false)}
+                />
             </div>
         </AuthenticatedLayout>
     )
