@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput"
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/Constants"
 import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({ tasks, queryParams = null, showProject = true,project = 0 }) {
+export default function TaskTable({ tasks, queryParams = null, showProject = true,project = 0,deleteTask }) {
     console.log(tasks);
 
     queryParams = queryParams || {};
@@ -127,7 +127,7 @@ export default function TaskTable({ tasks, queryParams = null, showProject = tru
                                     <td className="px-4 py-4">
                                         <img src={task.image_path} alt={task.name} className="object-cover w-12 h-12 rounded" />
                                     </td>
-                                    {showProject && <td className="px-4 py-4">{task.project.name}</td>}
+                                    {showProject && <td className="px-4 py-4">{task.project?.name}</td>}
                                     <td className="px-4 py-4 font-medium text-gray-900 dark:text-white">{task.name}</td>
                                     <td className="px-4 py-4">
                                         <span className={`px-2 py-1 rounded text-white ${TASK_STATUS_CLASS_MAP[task.status]}`}>
@@ -144,7 +144,8 @@ export default function TaskTable({ tasks, queryParams = null, showProject = tru
                                     <td className="px-4 py-4">{task.created_by.name}</td>
                                     <td className="px-4 py-4 space-x-2">
                                         <Link href={route('tasks.edit', task.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</Link>
-                                        <Link href={route('tasks.destroy', task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</Link>
+                                        <p onClick={(e) => deleteTask(task.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</p>
+
                                     </td>
                                 </tr>
                             ))}
