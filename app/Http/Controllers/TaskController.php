@@ -115,7 +115,30 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+
+        $data = $request->validated();
+
+        $image = $data['image'];
+        if ($image) {
+            $image = $image->store('tasks', 'public');
+        }else{
+            $image = $task->image_path;
+        }
+
+
+        $task->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'due_date' => $data['due_date'],
+            'status' => $data['status'],
+            'priority' => $data['priority'],
+            'image_path' => $image,
+            'project_id' => $data['project'],
+            'assigned_user_id' => $data['user'],
+            'updated_by' => Auth::id(),
+        ]);
+
+        return to_route('tasks.index')->with('success', 'Task updated successfully');
     }
 
     /**
