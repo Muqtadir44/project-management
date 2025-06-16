@@ -1,14 +1,14 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\TaskResource;
+use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -37,9 +37,9 @@ class ProjectController extends Controller
             ->paginate(10)->onEachSide(5);
 
         return Inertia::render("Projects/Index", [
-            "projects" => ProjectResource::collection($projects),
+            "projects"    => ProjectResource::collection($projects),
             "queryParams" => request()->query() ?: null,
-            "success" => session("success"),
+            "success"     => session("success"),
         ]);
     }
 
@@ -64,21 +64,19 @@ class ProjectController extends Controller
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
 
-
         $image = $data['image'] ?? null;
         if ($image) {
             $image = $image->store('projects', 'public');
         }
 
-
         Project::create([
-            'name' => $data['name'],
+            'name'        => $data['name'],
             'description' => $data['description'],
-            'due_date' => $data['due_date'],
-            'status' => $data['status'],
-            'image_path' => $image,
-            'created_by' => Auth::id(),
-            'updated_by' => Auth::id(),
+            'due_date'    => $data['due_date'],
+            'status'      => $data['status'],
+            'image_path'  => $image,
+            'created_by'  => Auth::id(),
+            'updated_by'  => Auth::id(),
         ]);
 
         return to_route('projects.index')->with('success', 'Project created successfully');
@@ -111,8 +109,8 @@ class ProjectController extends Controller
             ->paginate(10)->onEachSide(5);
 
         return Inertia::render("Projects/Show", [
-            "project" => new ProjectResource($project),
-            "tasks" => TaskResource::collection($tasks),
+            "project"     => new ProjectResource($project),
+            "tasks"       => TaskResource::collection($tasks),
             "queryParams" => request()->query() ?: null,
 
         ]);
@@ -134,9 +132,7 @@ class ProjectController extends Controller
         $data = $request->validated();
         // dd($data);
 
-
         $data['updated_by'] = Auth::id();
-
 
         $image = $data['image'] ?? null;
         if ($image) {
@@ -146,14 +142,13 @@ class ProjectController extends Controller
             $image = $image->store('projects', 'public');
         }
 
-
         $project->update([
-            'name' => $data['name'],
+            'name'        => $data['name'],
             'description' => $data['description'],
-            'due_date' => $data['due_date'],
-            'status' => $data['status'],
-            'image_path' => $image,
-            'updated_by' => Auth::id(),
+            'due_date'    => $data['due_date'],
+            'status'      => $data['status'],
+            'image_path'  => $image,
+            'updated_by'  => Auth::id(),
         ]);
 
         return to_route('projects.index')->with('success', 'Project updated successfully');
@@ -164,13 +159,45 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        try {
+            // Delete project image if exists
+            if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
+                Storage::disk('public')->delete($project->image_path);
+            }
 
-        if ($project->image_path && Storage::disk('public')->exists($project->image_path)) {
-            Storage::disk('public')->delete($project->image_path);
+            // Delete related tasks and check for success
+            if (! $this->deleteTasks($project->id)) {
+                return redirect()->route('projects.index')->with('error', 'Failed to delete related tasks.');
+            }
+
+            // Delete the project itself
+            $project->delete();
+
+            return redirect()->route('projects.index')->with('success', 'Project and related tasks deleted.');
+        } catch (\Exception $e) {
+            Log::error("Project deletion failed for ID {$project->id}: " . $e->getMessage());
+            return redirect()->route('projects.index')->with('error', 'Failed to delete project. Please try again later.');
         }
-
-        $project->delete();
-
-        return redirect()->route('projects.index')->with('success', 'Project deleted.');
     }
+
+    protected function deleteTasks($projectId): bool
+    {
+        try {
+            $tasks = Task::where('project_id', $projectId)->get();
+
+            foreach ($tasks as $task) {
+                if (! empty($task->image_path) && Storage::disk('public')->exists($task->image_path)) {
+                    Storage::disk('public')->delete($task->image_path);
+                }
+            }
+
+            Task::where('project_id', $projectId)->delete();
+
+            return true; // Success
+        } catch (\Exception $e) {
+            Log::error("Failed to delete tasks for project ID {$projectId}: " . $e->getMessage());
+            return false; // Failure
+        }
+    }
+
 }
