@@ -30,8 +30,9 @@ class TaskResource extends JsonResource
             'assignedUserId' => new UserResource($this->createdBy),
             'created_by' =>  new UserResource($this->createdBy),
             'updated_by' => new UserResource($this->updatedBy),
-            'due_date' => (new Carbon($this->created_at))->format('d-M-Y'),
-            'created_at' => (new Carbon($this->updated_at))->format('d-M-Y'),
+            'due_date' => (new Carbon($this->due_date))->format('d-M-Y'),
+            'dueDate' =>(new Carbon($this->due_date))->format('Y-m-d'),
+            'created_at' => (new Carbon($this->created_at))->format('d-M-Y'),
         ];
     }
 }
