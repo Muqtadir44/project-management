@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -21,27 +20,27 @@ class TaskController extends Controller
     {
         $query = Task::query();
 
-        $sortField = request("sortField","created_at");
-        $sortOrder = request("sortOrder","desc");
+        $sortField = request("sortField", "created_at");
+        $sortOrder = request("sortOrder", "desc");
 
-        if(request("name")){
-            $query->where("name", "like", "%".request("name")."%");
+        if (request("name")) {
+            $query->where("name", "like", "%" . request("name") . "%");
         }
 
-        if(request("status")){
+        if (request("status")) {
             $query->where("status", request("status"));
         }
 
-        if(request("priority")){
+        if (request("priority")) {
             $query->where("priority", request("priority"));
         }
 
         $tasks = $query
-                    ->orderBy($sortField, $sortOrder)
-                    ->paginate(10)->onEachSide(5);
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10)->onEachSide(5);
 
-        return Inertia::render("Tasks/Index",[
-            "tasks" => TaskResource::collection($tasks),
+        return Inertia::render("Tasks/Index", [
+            "tasks"       => TaskResource::collection($tasks),
             "queryParams" => request()->query() ?: null,
         ]);
 
@@ -53,8 +52,8 @@ class TaskController extends Controller
     public function create()
     {
         $projects = Project::all()->pluck("name", "id");
-        $users  = User::all()->pluck("name", "id");
-        return inertia("Tasks/Create",['projects' => $projects,'users' => $users]);
+        $users    = User::all()->pluck("name", "id");
+        return inertia("Tasks/Create", ['projects' => $projects, 'users' => $users]);
     }
 
     /**
@@ -62,30 +61,28 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-         $data = $request->validated();
+        $data = $request->validated();
         // dd($data);
 
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();
-
 
         $image = $data['image'] ?? null;
         if ($image) {
             $image = $image->store('tasks', 'public');
         }
 
-
         Task::create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'due_date' => $data['due_date'],
-            'status' => $data['status'],
-            'priority' => $data['priority'],
-            'image_path' => $image,
-            'project_id' => $data['project'],
+            'name'             => $data['name'],
+            'description'      => $data['description'],
+            'due_date'         => $data['due_date'],
+            'status'           => $data['status'],
+            'priority'         => $data['priority'],
+            'image_path'       => $image,
+            'project_id'       => $data['project'],
             'assigned_user_id' => $data['user'],
-            'created_by' => Auth::id(),
-            'updated_by' => Auth::id(),
+            'created_by'       => Auth::id(),
+            'updated_by'       => Auth::id(),
         ]);
 
         return to_route('tasks.index')->with('success', 'Task created successfully');
@@ -96,7 +93,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-            //    return inertia("Tasks/Show");
+        $task = TaskResource::make($task);
+        return inertia("Tasks/Show", [
+            'task' => $task,
+        ]);
     }
 
     /**
@@ -104,10 +104,15 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        $projects = Project::get();
-        $users = User::get();
+        $projects = Project::all()->pluck("name", "id");
+        $users    = User::all()->pluck("name", "id");
+        $task = TaskResource::make($task);
 
-        return inertia("Tasks/Edit",["task", TaskResource::make($task)]);
+        return inertia("Tasks/Edit", [
+            "task"=> $task,
+            "users"    => $users,
+            "projects" => $projects,
+        ]);
     }
 
     /**
@@ -117,25 +122,27 @@ class TaskController extends Controller
     {
 
         $data = $request->validated();
-
+        // dd($data);
         $image = $data['image'];
         if ($image) {
+             if ($task->image_path && Storage::disk('public')->exists($task->image_path)) {
+                Storage::disk('public')->delete($task->image_path);
+            }
             $image = $image->store('tasks', 'public');
-        }else{
+        } else {
             $image = $task->image_path;
         }
 
-
         $task->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'due_date' => $data['due_date'],
-            'status' => $data['status'],
-            'priority' => $data['priority'],
-            'image_path' => $image,
-            'project_id' => $data['project'],
+            'name'             => $data['name'],
+            'description'      => $data['description'],
+            'due_date'         => $data['due_date'],
+            'status'           => $data['status'],
+            'priority'         => $data['priority'],
+            'image_path'       => $image,
+            'project_id'       => $data['project'],
             'assigned_user_id' => $data['user'],
-            'updated_by' => Auth::id(),
+            'updated_by'       => Auth::id(),
         ]);
 
         return to_route('tasks.index')->with('success', 'Task updated successfully');
@@ -146,13 +153,13 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-         if ($task->image_path && Storage::disk('public')->exists($task->image_path)) {
+        if ($task->image_path && Storage::disk('public')->exists($task->image_path)) {
             Storage::disk('public')->delete($task->image_path);
         }
 
         $task->delete();
 
-        return back()->with('success','Task Deleted');
+        return back()->with('success', 'Task Deleted');
         // return redirect()->route('tasks.index')->with('success', 'Task deleted.');
     }
 }
