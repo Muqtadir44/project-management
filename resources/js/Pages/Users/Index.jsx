@@ -139,7 +139,12 @@ export default function Index({ users, queryParams = null }) {
                                                             alt={user.name}
                                                         />
                                                         <div>
-                                                            <div className="font-medium text-gray-900 dark:text-white">{user.name}</div>
+                                                            <div className="font-medium text-gray-900 dark:text-white hover:underline">
+                                                         <Link href={route('users.show', user.id)}>
+                                                        {user.name}
+                                                        </Link>
+                                                            {/* {user.name} */}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
