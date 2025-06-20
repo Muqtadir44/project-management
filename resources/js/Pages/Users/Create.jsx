@@ -20,7 +20,9 @@ export default function Create({ roles, designations }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route('users.store'), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                
+            },
         });
     };
 

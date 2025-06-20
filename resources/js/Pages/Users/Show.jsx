@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import { Mail, Briefcase, User, CalendarCheck } from 'lucide-react';
 
-export default function Create({ user }) {
+export default function Show({ user }) {
     return (
         <AuthenticatedLayout
             header={

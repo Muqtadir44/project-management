@@ -37,7 +37,9 @@ export default function Edit({ project }) {
     const onSubmit = (e) => {
         e.preventDefault();
         post(route('projects.update', project.id), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                
+            },
         });
     }
 

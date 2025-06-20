@@ -24,7 +24,9 @@ export default function Edit({ user, roles, designations }) {
         console.log('after submit',data);
 
         post(route('users.update',user.id), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                reset();
+            },
         });
     };
 

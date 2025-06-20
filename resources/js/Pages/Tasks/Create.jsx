@@ -81,7 +81,9 @@ export default function Create({ projects ,users}) {
     const onSubmit = (e) => {
         e.preventDefault();
         post(route('tasks.store'), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                
+            },
         });
     }
 

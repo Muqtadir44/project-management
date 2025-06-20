@@ -35,7 +35,9 @@ export default function Create() {
     const onSubmit = (e) => {
         e.preventDefault();
         post(route('projects.store'), {
-            onSuccess: () => reset(),
+            onSuccess: () => {
+                
+            },
         });
     }
 
