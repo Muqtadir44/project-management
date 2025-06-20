@@ -2,6 +2,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavBar from '@/Components/NavBar';
 import NavLink from '@/Components/NavLink';
+import ThemeToggle from '@/Components/ThemeToggle';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
@@ -23,7 +24,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <ApplicationLogo className="block w-auto text-gray-800 fill-current h-9 dark:text-gray-200" />
                                 </Link>
                             </div>
-{/*
+                            {/*
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('dashboard')}
@@ -35,8 +36,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                 <NavBar/>
                         </div>
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
+                        <div className="hidden gap-4 sm:ms-6 sm:flex sm:items-center">
+                          <ThemeToggle />
+                            <div className="relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
