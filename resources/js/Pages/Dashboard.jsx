@@ -1,7 +1,9 @@
+import StatTile from "@/Components/StatTile";
 import TableHeading from "@/Components/TableHeading";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { TASK_PRIORITY_CLASS_MAP, TASK_PRIORITY_TEXT_MAP, TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants";
 import { Head, Link } from "@inertiajs/react";
+import { CheckCircle, Clock, PlayCircle } from "lucide-react";
 
 export default function Dashboard({
     auth,
@@ -27,39 +29,30 @@ export default function Dashboard({
             <div className="py-12">
 
                 <div className="grid grid-cols-3 gap-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <h3 className="text-2xl font-semibold text-amber-500">
-                                Pending Tasks
-                            </h3>
-                            <p className="mt-4 text-xl">
-                                <span className="mr-2">{myPendingTasks}</span>/
-                                <span className="ml-2">{totalPendingTasks}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <h3 className="text-2xl font-semibold text-blue-500">
-                                In Progress Tasks
-                            </h3>
-                            <p className="mt-4 text-xl">
-                                <span className="mr-2">{myProgressTasks}</span>/
-                                <span className="ml-2">{totalProgressTasks}</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div className="overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">
-                            <h3 className="text-2xl font-semibold text-green-500">
-                                Completed Tasks
-                            </h3>
-                            <p className="mt-4 text-xl">
-                                <span className="mr-2">{myCompletedTasks}</span>/
-                                <span className="ml-2">{totalCompletedTasks}</span>
-                            </p>
-                        </div>
-                    </div>
+                    <StatTile
+                        title="Pending Tasks"
+                        myCount={myPendingTasks}
+                        totalCount={totalPendingTasks}
+                        color="amber"
+                        icon={Clock}
+                        delay={0}
+                    />
+                    <StatTile
+                        title="In Progress Tasks"
+                        myCount={myProgressTasks}
+                        totalCount={totalProgressTasks}
+                        color="blue"
+                        icon={PlayCircle}
+                        delay={150}
+                    />
+                    <StatTile
+                        title="Completed Tasks"
+                        myCount={myCompletedTasks}
+                        totalCount={totalCompletedTasks}
+                        color="green"
+                        icon={CheckCircle}
+                        delay={300}
+                    />
                 </div>
 
                 <div className="mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8">
